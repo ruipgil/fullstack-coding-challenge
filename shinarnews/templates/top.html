@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <ol class="posts">
+    {% for story in stories %}
+      <li>
+        <a href="{{ story.link }}" />
+          <div>
+            <strong>{{ story.title }}</strong>
+          </div>
+          <div>
+            {% for translated_story in story.translations %}
+              <strong>
+                {{ translated_story.title }}
+              </strong>
+            {% endfor %}
+          </div>
+        </a>
+      </li>
+    {% endfor %}
+  </ol>
+{% endblock %}
