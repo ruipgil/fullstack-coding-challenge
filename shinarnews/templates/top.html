@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
 {% block body %}
 
-  <ol class="posts">
+  <ol id="top-stories" class="posts">
     {% for story in stories %}
       <li>
         <a href="{{ story.link }}" />
           <div>
-            <strong>{{ story.title }}</strong>
+            <strong class="story-title">{{ story.title }}</strong>
           </div>
           <div>
             {% for translated_story in story.translations %}
-              <strong>
+              <strong class="translation-title">
                 {{ translated_story.title }}
               </strong>
             {% endfor %}
@@ -19,4 +19,24 @@
       </li>
     {% endfor %}
   </ol>
+  <script>
+const update_dom = (data) => {
+  document.querySelectorAll("#top-stories li").forEach((story, i) => {
+    const story_data = data[i]
+    story.querySelector(".story-title").innerText = story_data.title
+    story.querySelector("a").href = story_data.link
+    story.querySelectorAll(".translation-title").forEach((translation, j) => {
+      const translation_data = story.translations[j]
+    })
+  })
+}
+const update = () => {
+  fetch('/.json')
+    .then((response) => response.json())
+    .then((data) => update_dom(data))
+    .catch((err) => console.error(err))
+}
+
+setInterval(update, 10000)
+  </script>
 {% endblock %}
