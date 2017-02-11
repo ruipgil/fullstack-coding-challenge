@@ -1,8 +1,11 @@
 <!doctype html>
 <title>ShinarNews - HackerNews translated by Unbabel</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-<div class="page">
-  <h1>ShinarNews</h1>
+<div class="container">
+  <div class="page-header">
+	  <h1>ShinarNews</h1>
+  </div>
   <div class="body">
   {% block body %}{% endblock %}
   </div>
@@ -10,3 +13,5 @@
     Made with Unbabel
   </div>
 </div>
+
+<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->

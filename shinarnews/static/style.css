@@ -1,0 +1,9 @@
+.footer {
+  color: #999;
+  text-align: center;
+}
+
+/* @media (min-width: 1200px) */
+.container {
+  max-width: 700px;
+}
