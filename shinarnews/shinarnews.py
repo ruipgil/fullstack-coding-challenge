@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from Story import Story
 from hn import top_stories, get_item_details
 from pymongo import MongoClient
@@ -13,13 +13,25 @@ app = Flask(__name__)
 # TODO: Change to env variables
 client = MongoClient('localhost', 32768)
 mongo = client.test
+""" Database structure:
+    stories: [{ id, title, author, ... }]
+    top_stories: [{ top: [] }] #only one record
+"""
 
-_previous_stories = []
+
+def previous_top():
+    tops = mongo.top_stories.find_one()
+    return tops['top'] if tops is not None else []
+
+def save_top(tops):
+    if mongo.top_stories.count() == 0:
+        mongo.top_stories.insert_one({'top': tops})
+    else:
+        mongo.top_stories.update_one({}, {'$set': {'top': tops}})
 
 def get_stories():
-    global _previous_stories
     stories_ids = top_stories(STORIES_PER_PAGE)
-    _previous_stories = stories_ids
+    save_top(stories_ids)
 
     return retrieve_stories(stories_ids)
 
@@ -37,34 +49,21 @@ def retrieve_stories(stories_ids):
 
     return _stories
 
-def has_changed():
-    global _previous_stories
-    stories_ids = top_stories(STORIES_PER_PAGE)
-
-    if set(stories_ids) != set(_previous_stories):
-        _previous_stories = stories_ids
-        # TODO: async!
-        # get_stories()
-        return False
-    else:
-        return True
-
-
 @app.route('/')
 def stories():
     """ Shows the stories on HackerNews
     """
 
-    return render_template('top.html', stories=retrieve_stories(_previous_stories))
+    return render_template('top.html', stories=retrieve_stories(previous_top()))
 
+@app.route('/.json')
+def json_stories():
+    return jsonify([story.to_json() for story in retrieve_stories(previous_top())])
 
-# timer that each XX seconds checks for new data
-
+# timer that checks for new data each XX seconds
 import threading
 get_stories()
 threading.Timer(20, get_stories).start()
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
