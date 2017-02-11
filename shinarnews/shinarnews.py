@@ -1,69 +1,67 @@
+import threading
+import db
 from flask import Flask, request, render_template, jsonify
-from Story import Story
 from hn import top_stories, get_item_details
-from pymongo import MongoClient
 
 STORIES_PER_PAGE = 10
+HN_UPDATE_INTERVAL = 30
 
 app = Flask(__name__)
-# TODO
-# app.config.from_object(__name__)
+app.config.from_object(__name__)
 # app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
 
-# TODO: Change to env variables
-client = MongoClient('localhost', 32768)
-mongo = client.test
-""" Database structure:
-    stories: [{ id, title, author, ... }]
-    top_stories: [{ top: [] }] #only one record
-"""
+def get_top_stories():
+    """ Gets the current list of top stories, saves it,
+        and retrieves them
 
-
-def previous_top():
-    tops = mongo.top_stories.find_one()
-    return tops['top'] if tops is not None else []
-
-def save_top(tops):
-    if mongo.top_stories.count() == 0:
-        mongo.top_stories.insert_one({'top': tops})
-    else:
-        mongo.top_stories.update_one({}, {'$set': {'top': tops}})
-
-def get_stories():
+    Returns:
+        list of :obj:`Story`
+    """
     stories_ids = top_stories(STORIES_PER_PAGE)
-    save_top(stories_ids)
+    db.save_top_stories(stories_ids)
 
     return retrieve_stories(stories_ids)
 
 def retrieve_stories(stories_ids):
-    _stories = []
+    """ Maps stories ids to story instances.
+        It first looks in the database, if a story doesn't
+        exist yet, it calls the HN API for the details about
+        a story.
+
+    Args:
+        stories_ids (list of int)
+    Returns:
+        list of :obj:`Story`
+    """
+    stories = []
     for story_id in stories_ids:
-        m_stories = mongo.stories
-        cached_story = m_stories.find_one({'id': story_id})
+        cached_story = db.find_story(story_id)
         if cached_story is None:
             story = get_item_details(story_id)
-            story.save(mongo)
+            db.save_story(story)
         else:
-            story = Story.from_db(cached_story)
-        _stories.append(story)
+            story = cached_story
+        stories.append(story)
 
-    return _stories
+    return stories
 
 @app.route('/')
-def stories():
-    """ Shows the stories on HackerNews
+def html_stories():
+    """ Renders the top stories on HackerNews as HTML
     """
-
-    return render_template('top.html', stories=retrieve_stories(previous_top()))
+    stories = retrieve_stories(db.previous_top_stories())
+    return render_template('top.html', stories=stories)
 
 @app.route('/.json')
 def json_stories():
-    return jsonify([story.to_json() for story in retrieve_stories(previous_top())])
+    """ Sends the current top stories JSON encoded
+    """
+    stories = retrieve_stories(db.previous_top_stories())
+    return jsonify([story.to_json() for story in stories])
 
+get_top_stories()
 # timer that checks for new data each XX seconds
-import threading
-get_stories()
-threading.Timer(20, get_stories).start()
+threading.Timer(HN_UPDATE_INTERVAL, get_top_stories).start()
 
 if __name__ == '__main__':
     app.run(debug=True)

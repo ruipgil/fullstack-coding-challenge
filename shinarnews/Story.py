@@ -11,10 +11,6 @@ class Story:
         else:
             self.translations = translations
 
-    def save(self, db):
-        if db.stories.find_one({'id': self.id}) is None:
-            db.stories.insert_one(self.to_json())
-
     def translate(self, target_lang):
         return
 
