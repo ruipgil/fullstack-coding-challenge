@@ -11,9 +11,6 @@ class Story:
         else:
             self.translations = translations
 
-    def translate(self, target_lang):
-        return
-
     def to_json(self):
         return {
                 'id': self.id,
@@ -26,7 +23,7 @@ class Story:
 
     @staticmethod
     def from_json(json):
-        if json['type'] == 'story' or json['type'] == 'job':
+        if json.get('type') and json['type'] == 'story' or json['type'] == 'job':
             return Story(json['id'], json['title'], json.get('url', ''), json['by'], json.get('translations', {}))
         return None
 
