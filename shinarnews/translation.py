@@ -6,6 +6,10 @@ import db
 from Story import Story
 from unbabel.api import UnbabelApi
 
+import logging
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+
 TRANSLATION_CHECKING_INTERVAL = 20
 
 api = UnbabelApi(
@@ -22,6 +26,8 @@ def request_translate_story(story, langs):
         langs (list of str)
     """
     for lang in langs:
+        if db.has_translation_in_process(story.id, lang):
+            continue
         try:
             translation = api.post_mt_translations(story.title, target_language=lang)
             db.add_waiting_translation(translation.uid, story.id, lang)

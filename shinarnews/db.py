@@ -120,7 +120,10 @@ def complete_translation(translation_uid, translation, lang):
 
     parent_story_id = db.translations.find_one({'uid': translation_uid})['story_id']
     parent_story = find_story(parent_story_id)
-    parent_story.translations[lang] = translation
+    if isinstance(parent_story.translations, dict):
+        parent_story.translations[lang] = translation
+    else:
+        parent_story.translations = {lang: translation}
     update_story(parent_story)
 
 def get_waiting_translation(translation_uid):
@@ -138,3 +141,9 @@ def get_translations():
 
 def update_translation_status(uid, status):
     db.translations.update_one({'uid': uid}, {'$set': {'status': status}})
+
+def has_translation_in_process(story_id, target_language):
+    return db.translations.find({
+        'story_id': story_id,
+        'target_language': target_language
+    }).count() > 0

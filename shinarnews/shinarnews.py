@@ -1,5 +1,7 @@
 import os
 import threading
+import time
+import sched
 import db
 from flask import Flask, request, render_template, jsonify
 from hn import top_stories, get_item_details
@@ -88,8 +90,11 @@ def stories_updater():
     """
     get_top_stories()
     translation_updater()
-    threading.Timer(HN_UPDATE_INTERVAL, stories_updater).start()
-threading.Timer(0, stories_updater).start()
+    s.enter(HN_UPDATE_INTERVAL, 1, stories_updater)
+
+s = sched.scheduler(time.time, time.sleep)
+s.enter(0, 1, stories_updater)
+s.run(blocking=False)
 
 if __name__ == '__main__':
     app.run(debug=True, threaded=True)
