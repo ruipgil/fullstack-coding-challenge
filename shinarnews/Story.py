@@ -7,7 +7,7 @@ class Story:
         self.lang = lang
 
         if translations is None:
-            self.translations = []
+            self.translations = {}
         else:
             self.translations = translations
 
@@ -21,24 +21,22 @@ class Story:
                 'link': self.link,
                 'author': self.author,
                 'lang': self.lang,
-                'translations': [trans.to_json() for trans in self.translations]
+                'translations': self.translations
                 }
 
     @staticmethod
     def from_json(json):
         if json['type'] == 'story' or json['type'] == 'job':
-            return Story(json['id'], json['title'], json['url'], json['by'])
+            return Story(json['id'], json['title'], json.get('url', ''), json['by'], json.get('translations', {}))
         return None
 
     @staticmethod
     def from_db(story):
-        translations = [Story.from_db(trans) for trans in story['translations']]
-
         return Story(
             story['id'],
             story['title'],
             story['link'],
             story['author'],
             story['lang'],
-            translations
+            story['translations']
         )

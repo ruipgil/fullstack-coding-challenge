@@ -38,7 +38,7 @@ def request_translate_stories(stories, langs):
     for story in stories:
         request_translate_story(story, langs)
 
-def translation_checker():
+def translation_updater():
     """ Checks for pending translations regularly,
         in a separate thread
     """
@@ -50,13 +50,9 @@ def translation_checker():
         if translation.status == 'deliver_ok':
             translated_text = translation.translation
             target_language = translation.target_language
-            as_story = Story(None, translated_text, None, None, target_language)
-            db.complete_translation(uid, as_story)
+            db.complete_translation(uid, translated_text, target_language)
         # TODO more statuses
 
         # except Exception as err:
         #     print('Err: %s' % err)
 
-    threading.Timer(TRANSLATION_CHECKING_INTERVAL, translation_checker).start()
-
-translation_checker()

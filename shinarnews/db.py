@@ -102,14 +102,14 @@ def add_waiting_translation(uid, story_id):
         'status': WAITING_STATUS
     })
 
-def complete_translation(translation_uid, story):
+def complete_translation(translation_uid, translation, lang):
     """ Marks a pending translation as complete and
         updates the parent story with the translation
 
     Args:
         translation_uid (str): the uid of the translation
-        story (Story): the translation as a story, this will be
-            added to the list of translations of the parent story
+        translation (str): the text translated to a language
+        lang (str): abbreviation of the language translated to
     """
     db.translations.update_one({
         'uid': translation_uid
@@ -117,7 +117,7 @@ def complete_translation(translation_uid, story):
 
     parent_story_id = db.translations.find_one({'uid': translation_uid})['story_id']
     parent_story = find_story(parent_story_id)
-    parent_story.translations.append(story)
+    parent_story.translations[lang] = translation
     update_story(parent_story)
 
 def get_waiting_translation(translation_uid):
