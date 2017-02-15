@@ -8,8 +8,35 @@
   max-width: 700px;
 }
 
+.posts > li {
+  margin-bottom: 1.2rem;
+}
+
+.dashboard-link {
+  float: right;
+  font-size: 1.5rem;
+}
+
 .list-unstyled small {
   font-size: 0.8em;
   width: 1rem;
   display: inline-block;
+}
+
+.translations-list .details {
+  color: #999;
+}
+
+.translations-list .title {
+  margin-bottom: -6px;
+  font-size: 2rem;
+}
+
+.details span {
+  margin-right: 1rem;
+}
+
+
+.translations-list li {
+  margin-bottom: 1rem;
 }
