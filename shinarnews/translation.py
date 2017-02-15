@@ -2,8 +2,8 @@ import os
 import json
 import threading
 
-import db
-from Story import Story
+import shinarnews.db as db
+from shinarnews.Story import Story
 from unbabel.api import UnbabelApi
 
 import logging

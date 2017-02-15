@@ -2,10 +2,10 @@ import os
 import threading
 import time
 import sched
-import db
+import shinarnews.db as db
 from flask import Flask, request, render_template, jsonify
-from hn import top_stories, get_item_details
-from translation import request_translate_stories, translation_updater
+from shinarnews.hn import top_stories, get_item_details
+from shinarnews.translation import request_translate_stories, translation_updater
 
 STORIES_PER_PAGE = 10
 HN_UPDATE_INTERVAL = 30
@@ -84,6 +84,7 @@ def json_stories():
     stories = retrieve_stories(db.previous_top_stories())
     return jsonify([story.to_json() for story in stories])
 
+s = sched.scheduler(time.time, time.sleep)
 def stories_updater():
     """ Updates the stories in regular periods of time.
         Executes in a separate thread.
@@ -92,9 +93,7 @@ def stories_updater():
     translation_updater()
     s.enter(HN_UPDATE_INTERVAL, 1, stories_updater)
 
-s = sched.scheduler(time.time, time.sleep)
-s.enter(0, 1, stories_updater)
-s.run(blocking=False)
-
-if __name__ == '__main__':
-    app.run(debug=True, threaded=True)
+if __name__ == 'shinarnews.shinarnews':
+    s.enter(0, 1, stories_updater)
+    s.run(blocking=False)
+    # app.run(debug=True, threaded=True)

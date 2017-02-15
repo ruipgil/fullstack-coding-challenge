@@ -1,1 +1,1 @@
-from .shinarnews import app
+from .shinarnews import app, s, stories_updater

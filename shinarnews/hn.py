@@ -1,5 +1,5 @@
 import requests
-from Story import Story
+from shinarnews.Story import Story
 
 STORIES_URL = 'https://hacker-news.firebaseio.com/v0/topstories.json'
 ITEM_URL = 'https://hacker-news.firebaseio.com/v0/item/%d.json'
