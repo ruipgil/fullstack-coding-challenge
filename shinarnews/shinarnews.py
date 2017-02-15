@@ -70,9 +70,13 @@ def json_stories():
     stories = retrieve_stories(db.previous_top_stories())
     return jsonify([story.to_json() for story in stories])
 
-get_top_stories()
-# timer that checks for new data each XX seconds
-threading.Timer(HN_UPDATE_INTERVAL, get_top_stories).start()
+def stories_updater():
+    """ Updates the stories in regular periods of time.
+        Executes in a separate thread.
+    """
+    get_top_stories()
+    threading.Timer(HN_UPDATE_INTERVAL, stories_updater).start()
+threading.Timer(0, stories_updater).start()
 
 if __name__ == '__main__':
     app.run(debug=True)
