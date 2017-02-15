@@ -1,26 +1,37 @@
 {% extends "layout.html" %}
+
+{% macro status_class(status) -%}
+  {% if status == 'complete' %}
+    label-success
+  {% elif status in ['failed', 'canceled', 'rejected'] %}
+    label-danger
+  {% else %}
+    label-warning
+  {% endif %}
+{%- endmacro %}
+
 {% block body %}
-  <ul>
+  <ul class='translations-list list-unstyled'>
     {% for translation in translations %}
       <li>
-        <div>
-          <small>en-{{ translation['target_language'] }}</small>
+        <div class="title">
           <a href='{{ translation['story'].link }}'>
             {{ translation['story'].title }}
           </a>
         </div>
-        <div class="row">
-          <ul class="list-inline">
-            <li>
-              {{ translation['uid'] }}
-            </li>
-            <li>
-              {{ translation['status'] }}
-            </li>
-            <li>
-              {{ translation['time'] }}
-            </li>
-          </ul>
+        <div class="details">
+          <span class="label {{ status_class(translation['status']) }}">
+            {{ translation['status'] }}
+          </span>
+          <span class="small">
+            <strong>English</strong> to <strong>{{ translation['target_language'] }}</strong>
+          </span>
+          <span class="small">
+            {{ translation['uid'] }}
+          </span>
+          <span class="small">
+            {{ translation['time'] }}
+          </span>
         </div>
       </li>
     {% endfor %}
