@@ -24,7 +24,7 @@ def request_translate_story(story, langs):
     for lang in langs:
         try:
             translation = api.post_mt_translations(story.title, target_language=lang)
-            db.add_waiting_translation(translation.uid, story.id)
+            db.add_waiting_translation(translation.uid, story.id, lang)
         except Exception as err:
             print('Can\'t translate story %d: %s' % (story.id, err))
 
@@ -51,6 +51,8 @@ def translation_updater():
             translated_text = translation.translation
             target_language = translation.target_language
             db.complete_translation(uid, translated_text, target_language)
+        else:
+            db.update_translation_status(uid, translation.status)
         # TODO more statuses
 
         # except Exception as err:
