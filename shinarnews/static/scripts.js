@@ -10,7 +10,6 @@ const update_dom = (data) => {
   data.forEach((storyData, i) => {
     const storyNode = storyNodes[i]
 
-    console.log(storyNode.querySelector('a'))
     updateNode('innerText', storyNode, ".story-title", storyData.title)
     updateNode('href', storyNode, "a", storyData.link)
 
