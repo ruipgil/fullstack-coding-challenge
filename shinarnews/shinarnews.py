@@ -1,10 +1,13 @@
+import os
 import threading
 import db
 from flask import Flask, request, render_template, jsonify
 from hn import top_stories, get_item_details
+from translation import request_translate_stories
 
 STORIES_PER_PAGE = 10
 HN_UPDATE_INTERVAL = 30
+TARGET_LANGUAGES = ['pt', 'it']
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -34,16 +37,24 @@ def retrieve_stories(stories_ids):
         list of :obj:`Story`
     """
     stories = []
+    stories_to_translate = []
     for story_id in stories_ids:
         cached_story = db.find_story(story_id)
         if cached_story is None:
             story = get_item_details(story_id)
+
+            if not db.has_translation_waiting(story_id):
+                stories_to_translate.append(story)
+
             db.save_story(story)
         else:
             story = cached_story
         stories.append(story)
 
+    request_translate_stories(stories_to_translate, TARGET_LANGUAGES)
+
     return stories
+
 
 @app.route('/')
 def html_stories():
