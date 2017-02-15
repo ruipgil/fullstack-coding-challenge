@@ -1,6 +1,4 @@
-import os
 import unittest
-import tempfile
 import shinarnews.db as db
 from shinarnews.Story import Story
 from shinarnews.shinarnews import STORIES_PER_PAGE
