@@ -1,6 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
 
+  <ol class='translation-template hidden'>
+    <li>
+      <small class"language"></small>
+      <span class="translation"></span>
+    </li>
+  </ol>
+
   <ol id="top-stories" class="posts">
     {% for story in stories %}
       <li>
@@ -8,35 +15,20 @@
           <div>
             <strong class="story-title">{{ story.title }}</strong>
           </div>
-          <div>
-            {% for translated_story in story.translations %}
-              <strong class="translation-title">
-                {{ translated_story.title }}
-              </strong>
-            {% endfor %}
+
+          <div class="row">
+            <ul class="list-unstyled translations">
+              {% for lang in translation_languages %}
+                <li>
+                  <small class"language">{{ lang if lang in story.translations else '' }}</small>
+                  <span class="translation">{{ story.translations.get(lang, '') }}</span>
+                </li>
+              {% endfor %}
+            </ul>
           </div>
         </a>
       </li>
     {% endfor %}
   </ol>
-  <script>
-const update_dom = (data) => {
-  document.querySelectorAll("#top-stories li").forEach((story, i) => {
-    const story_data = data[i]
-    story.querySelector(".story-title").innerText = story_data.title
-    story.querySelector("a").href = story_data.link
-    story.querySelectorAll(".translation-title").forEach((translation, j) => {
-      const translation_data = story.translations[j]
-    })
-  })
-}
-const update = () => {
-  fetch('/.json')
-    .then((response) => response.json())
-    .then((data) => update_dom(data))
-    .catch((err) => console.error(err))
-}
-
-setInterval(update, 10000)
-  </script>
+  <script src='{{ url_for('static', filename='scripts.js') }}'></script>
 {% endblock %}

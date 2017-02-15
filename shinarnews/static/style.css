@@ -7,3 +7,9 @@
 .container {
   max-width: 700px;
 }
+
+.list-unstyled small {
+  font-size: 0.8em;
+  width: 1rem;
+  display: inline-block;
+}

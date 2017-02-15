@@ -3,7 +3,7 @@ import threading
 import db
 from flask import Flask, request, render_template, jsonify
 from hn import top_stories, get_item_details
-from translation import request_translate_stories
+from translation import request_translate_stories, translation_updater
 
 STORIES_PER_PAGE = 10
 HN_UPDATE_INTERVAL = 30
@@ -61,7 +61,7 @@ def html_stories():
     """ Renders the top stories on HackerNews as HTML
     """
     stories = retrieve_stories(db.previous_top_stories())
-    return render_template('top.html', stories=stories)
+    return render_template('top.html', stories=stories, translation_languages=TARGET_LANGUAGES)
 
 @app.route('/.json')
 def json_stories():
@@ -75,6 +75,7 @@ def stories_updater():
         Executes in a separate thread.
     """
     get_top_stories()
+    translation_updater()
     threading.Timer(HN_UPDATE_INTERVAL, stories_updater).start()
 threading.Timer(0, stories_updater).start()
 
