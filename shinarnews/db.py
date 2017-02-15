@@ -1,6 +1,6 @@
 import os
 import datetime
-from Story import Story
+from shinarnews.Story import Story
 from pymongo import MongoClient, DESCENDING as PYM_DESC
 
 MONGO_HOST = os.environ.get('MONGO_HOST')
@@ -9,7 +9,11 @@ client = MongoClient(
     'localhost' if MONGO_HOST is None else MONGO_HOST,
     27017 if MONGO_PORT is None else int(MONGO_PORT)
 )
-db = client.test
+db = client.shinarnews
+
+def _use_test():
+    global db
+    db = client.shinarnews_test
 
 """ Database structure:
     stories: [{ id, title, author, ... }]
