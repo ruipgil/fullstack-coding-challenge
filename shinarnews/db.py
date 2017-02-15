@@ -1,7 +1,7 @@
 import os
 import datetime
 from Story import Story
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING as PYM_DESC
 
 MONGO_HOST = os.environ.get('MONGO_HOST')
 MONGO_PORT = os.environ.get('MONGO_PORT')
@@ -134,4 +134,7 @@ def get_waiting_translation(translation_uid):
     return db.translations.find_one({'uid': translation_uid})
 
 def get_translations():
-    return db.translations.find()
+    return db.translations.find().sort('time', PYM_DESC)
+
+def update_translation_status(uid, status):
+    db.translations.update_one({'uid': uid}, {'$set': {'status': status}})

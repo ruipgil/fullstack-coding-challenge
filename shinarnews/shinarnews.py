@@ -8,6 +8,10 @@ from translation import request_translate_stories, translation_updater
 STORIES_PER_PAGE = 10
 HN_UPDATE_INTERVAL = 30
 TARGET_LANGUAGES = ['pt', 'it']
+LANG_LONG = {
+    'pt': 'Portuguese',
+    'it': 'Italian'
+}
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -68,6 +72,7 @@ def dashboard():
     translations = list(db.get_translations())
     for translation in translations:
         translation['story'] = db.find_story(translation['story_id'])
+        translation['target_language'] = LANG_LONG[translation['target_language']]
     return render_template('dashboard.html', translations=translations)
 
 @app.route('/.json')
@@ -87,4 +92,4 @@ def stories_updater():
 threading.Timer(0, stories_updater).start()
 
 if __name__ == '__main__':
-    app.run(threaded=True)
+    app.run(debug=True, threaded=True)
