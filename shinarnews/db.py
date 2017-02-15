@@ -1,4 +1,5 @@
 import os
+import datetime
 from Story import Story
 from pymongo import MongoClient
 
@@ -89,7 +90,7 @@ def get_waiting_translations():
         'status': WAITING_STATUS
     })
 
-def add_waiting_translation(uid, story_id):
+def add_waiting_translation(uid, story_id, target_language):
     """ Add a translation as pending
 
     Args:
@@ -98,8 +99,10 @@ def add_waiting_translation(uid, story_id):
     """
     db.translations.insert_one({
         'uid': uid,
+        'time': datetime.datetime.now(),
         'story_id': story_id,
-        'status': WAITING_STATUS
+        'status': WAITING_STATUS,
+        'target_language': target_language
     })
 
 def complete_translation(translation_uid, translation, lang):
@@ -129,3 +132,6 @@ def get_waiting_translation(translation_uid):
         dict: record of the translation
     """
     return db.translations.find_one({'uid': translation_uid})
+
+def get_translations():
+    return db.translations.find()

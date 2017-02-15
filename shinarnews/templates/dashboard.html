@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block body %}
+  <ul>
+    {% for translation in translations %}
+      <li>
+        <div>
+          <small>en-{{ translation['target_language'] }}</small>
+          <a href='{{ translation['story'].link }}'>
+            {{ translation['story'].title }}
+          </a>
+        </div>
+        <div class="row">
+          <ul class="list-inline">
+            <li>
+              {{ translation['uid'] }}
+            </li>
+            <li>
+              {{ translation['status'] }}
+            </li>
+            <li>
+              {{ translation['time'] }}
+            </li>
+          </ul>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

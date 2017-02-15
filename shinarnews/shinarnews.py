@@ -63,6 +63,13 @@ def html_stories():
     stories = retrieve_stories(db.previous_top_stories())
     return render_template('top.html', stories=stories, translation_languages=TARGET_LANGUAGES)
 
+@app.route('/dashboard')
+def dashboard():
+    translations = list(db.get_translations())
+    for translation in translations:
+        translation['story'] = db.find_story(translation['story_id'])
+    return render_template('dashboard.html', translations=translations)
+
 @app.route('/.json')
 def json_stories():
     """ Sends the current top stories JSON encoded
@@ -80,4 +87,4 @@ def stories_updater():
 threading.Timer(0, stories_updater).start()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(threaded=True)
