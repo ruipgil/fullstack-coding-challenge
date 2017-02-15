@@ -6,10 +6,11 @@ const updateNode = (prop, elm, selector, text) => {
 }
 
 const update_dom = (data) => {
-  const storyNodes = document.querySelectorAll("#top-stories ul")
+  const storyNodes = document.querySelectorAll(".story")
   data.forEach((storyData, i) => {
     const storyNode = storyNodes[i]
 
+    console.log(storyNode.querySelector('a'))
     updateNode('innerText', storyNode, ".story-title", storyData.title)
     updateNode('href', storyNode, "a", storyData.link)
 

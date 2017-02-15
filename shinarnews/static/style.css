@@ -3,6 +3,7 @@
   font-size: 0.8em;
   text-align: right;
   margin: 2em 0 2em 0;
+  font-family: monospace;
 }
 
 /* @media (min-width: 1200px) */
@@ -41,4 +42,12 @@
 
 .translations-list li {
   margin-bottom: 1rem;
+}
+
+.more {
+  text-align: right;
+}
+.more a{
+  color: #999;
+  margin-left: 1em;
 }
