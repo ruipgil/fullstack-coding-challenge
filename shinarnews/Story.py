@@ -26,7 +26,7 @@ class Story:
 
     @staticmethod
     def from_json(json):
-        if json['type'] == 'story':
+        if json['type'] == 'story' or json['type'] == 'job':
             return Story(json['id'], json['title'], json['url'], json['by'])
         return None
 

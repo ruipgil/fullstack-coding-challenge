@@ -41,6 +41,4 @@ def get_item_details(story_id):
     url = ITEM_URL % story_id
     item = get_json(url)
 
-    if item['type'] == 'story':
-        return Story.from_json(item)
-    return None
+    return Story.from_json(item)
