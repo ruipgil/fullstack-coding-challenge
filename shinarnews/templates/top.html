@@ -1,13 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
 
-  <ol class='translation-template hidden'>
-    <li>
-      <small class"language"></small>
-      <span class="translation"></span>
-    </li>
-  </ol>
-
   <ol id="top-stories" class="posts">
     {% for story in stories %}
       <li>
@@ -20,7 +13,7 @@
             <ul class="list-unstyled translations">
               {% for lang in translation_languages %}
                 <li>
-                  <small class"language">{{ lang if lang in story.translations else '' }}</small>
+                  <small class="language">{{ lang if lang in story.translations else '' }}</small>
                   <span class="translation">{{ story.translations.get(lang, '') }}</span>
                 </li>
               {% endfor %}
