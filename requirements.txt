@@ -26,6 +26,5 @@ requests==2.13.0
 simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.3.1
--e git+https://github.com/ruipgil/unbabel-py/@316506987130850a96b95c201d1f62f95b473a01#egg=unbabel_py
 wcwidth==0.1.7
 Werkzeug==0.11.15

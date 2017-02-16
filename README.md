@@ -7,6 +7,10 @@
 ## Installing
 
 ```
+pip install -e git+https://github.com/ruipgil/unbabel-py/#egg=unbabel_py
+```
+
+```
 pip install -e .
 ```
 
