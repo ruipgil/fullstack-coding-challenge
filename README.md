@@ -1,44 +1,40 @@
-# Unbabel Fullstack Challenge
+# ShinarNews
 
-Hey :smile:
+> *Shinar*
+>
+> the place where the Babel Tower was built
 
-Welcome to our Fullstack Challenge repository. This README will guide you on how to participate in this challenge.
+## Installing
 
-In case you are doing this to apply for our open positions for a Fullstack Developer make sure you first check the available jobs at [https://unbabel.com/jobs](https://unbabel.com/jobs)
+```
+pip install -e .
+```
 
-Please fork this repo before you start working on the challenge. We will evaluate the code on the fork.
+## Running
 
-**FYI:** Please understand that this challenge is not decisive if you are applying to work at [Unbabel](https://unbabel.com/jobs). There are no right and wrong answers. This is just an opportunity for us both to work together and get to know each other in a more technical way.
+```
+flask run
+```
 
-## Challenge
+The app requires some environment variables to be set:
++ `` FLASK_APP ``: which should be set to ``` shinarnews ```
++ `` UNBABEL_USERNAME ``: refers to the username of the unbabel sanbox API
++ `` UNBABEL_API_KEY ``: must be set to the required API key
++ `` MONGO_PORT ``: optional, mongodb port. Defaults to 27017
++ `` MONGO_HOST ``: optional, mongodb host. Defaults to localhost
 
+The app can be tested by running:
+```
+python -m unittest
+```
 
-#### Build a multilingual Hackernews.
+## Remarks
 
-Create a multilingual clone of the Hackernews website, showing just the top 10 most voted news and their comments. 
-This website must be kept updated with the original hackernews website (every 10 minutes).
-
-Translations must be done using the Unbabel API in sandbox mode. (Ask whoever has been in contact with you about the credentials)
-
-Build a dashboard to check the status of all translations.
-
-
-#### Requirements
-* Use Flask web framework
-* Use Bootstrap
-* For MongoDB
-* Create a scalable application. 
-* Only use Unbabel's Translation API on sandbox mode
-* Have the news titles translated to 2 languages
-* Have unit tests
-
-
-#### Notes
-* We dont really care much about css but please dont make our eyes suffer. 
-* Page load time shouldnt exceed 2 secs 
-
-
-#### Resources
-* Unbabel's API: http://developers.unbabel.com/
-* Hackernews API: https://github.com/HackerNews/API
-
++ Stories are fetched from the HN api regularly and stored in a collection within mongodb.
++ The fetching process executes in a separate thread to the flask server
++ The client will ask for the stories using an AJAX request (using fetch), and update the DOM without the need to reload the page.
++ The (little) javascript code uses some of the features of the ES6 specification, and there is no bundling and transcompilation. This means that a modern and updated browser is needed to run the code.
++ Translations are requested whenever a new story is found. The target languages to translate (portuguese and italian) are hard coded, but could be changed easily.
++ In the same thread as the polling of new stories, the translations are checked.
++ In the client side, stories that have just been discovered will appear without translations, as they become available they will appear on the screen.
++ ShinarNews is tested and developed with python 3 in mind. It also uses a [tweaked version of the unbabel sdk](//github.com/ruipgil/unbabel-py).
